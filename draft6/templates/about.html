@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<link rel="stylesheet" href="/static/styles.css" type="text/css" >
+<script>
+document.getElementById("date").innerHTML = Date();
+</script>
+<title>RC CAR</title>
+</head>
+<body>
+<div class="grid">
+    <div class="pageheader">
+        <h1 align = "center">RC car control user interface</h1>
+    </div>
+    <div class="leftmenu">
+        <strong >menu</strong><br><br>
+        <ul>
+		<li><a href="/about" target ="">About</a></li><br>
+		<li><a href="/control" target ="">Control</a></li><br>
+		<li><a href="" target ="">Present</a></li><br>
+		<li><a href="/setting" target ="">Setting</a></li><br>
+		<li><a href="source_code" target ="">Source code</a></li><br>
+		<li><a href="" target ="">Issue report</a></li><br>
+		<li><a href="/updatelog" target ="">Update log</a></li><br>
+		<li><a href="/logoff" target ="">Log Off</a></li><br>
+        </ul>
+    </div>
+    <div class="about">
+		<p id="date"></p>
+        <p>This website is design by a student from Newcastle University for his master degree project. In the control page, user will be able to control the remote control car by pressing the button. Then the car will move according to the description on the button.</p>
+		<p>Feel free to play around on the website</p>
+		<p>When you finish, <strong>Please log off and press KILL THE SERVER button</strong></p>
+    </div>
+</body>
+</html>
