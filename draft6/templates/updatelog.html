@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
+<link rel="stylesheet" href="/static/styles.css" type="text/css" >
+<script>
+var myVar = setInterval(function(){ myTimer() }, 500);
 
-    <link rel="stylesheet" href="/static/styles.css" type="text/css" >
-
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+    document.getElementById("timer").innerHTML = t;
+}
+</script>
 <title>RC CAR</title>
 </head>
 <body>
 <div class="grid">
     <div class="pageheader">
         <h1 align = "center">RC car control user interface</h1>
+        <p align="right" id="timer"></p>
     </div>
     <div class="leftmenu">
         <strong >menu</strong><br><br>

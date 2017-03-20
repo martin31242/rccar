@@ -1,20 +1,22 @@
 import RPi.GPIO as GPIO
 import time
 
+global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, sensor_infrared, sensor_on, gpiodidstartup
+infrared = 11
+ultrasonic = 8
+servomotor = 12
+motor_L1 = 19
+motor_L2 = 21
+motor_R1 = 24
+motor_R2 = 26
+servo_turning_time = 0.5
+carspeed = 100
+sensor_infrared = False
+sensor_on = True
+
 def gpio_startup():
+    global a1,a2,b1,b2,gpiodidstartup, p
     GPIO.setmode(GPIO.BOARD)
-    global infrared,ultrasonic,servomotor,motor_L1,motor_L2,motor_R1,motor_R2,p,servo_turning_time,outputpin,a1,a2,b1,b2,carspeed,sensor_infrared,sensor_on,gpiodidstartup
-    infrared = 11
-    ultrasonic = 8
-    servomotor = 12
-    motor_L1 = 19
-    motor_L2 = 21
-    motor_R1 = 24
-    motor_R2 = 26
-    servo_turning_time = 0.5
-    carspeed = 100
-    sensor_infrared = False
-    sensor_on = True
     inputpin = [infrared,ultrasonic]
     outputpin = [servomotor,motor_L1,motor_L2,motor_R1,motor_R2]
     GPIO.setup(inputpin,GPIO.IN)
@@ -24,6 +26,7 @@ def gpio_startup():
     b1 = GPIO.PWM(motor_R1, 50)
     b2 = GPIO.PWM(motor_R2, 50)
     gpiodidstartup = True
+    p = GPIO.PWM(servomotor,50)
 
 def gpio_end():
     GPIO.cleanup()
@@ -32,9 +35,9 @@ def gpio_end():
 
 def sensor_if():
     global sensor_infrared
-    if GPIO.INPUT(infrared) == 1:
+    if GPIO.IN(infrared) == 1:
         sensor_infrared = True
-    elif GPIO.INPUT(infrared) == 0:
+    elif GPIO.IN(infrared) == 0:
         sensor_infrared = False
     else:
         print("infrared sensor error")
@@ -65,26 +68,25 @@ def sensor_ultrasonic():
     # That was the distance there and back so halve the value
     distance = distance / 2
     detect_distance = distance
-    time.sleep(0.1) #refresh every 0.1 second
-
+    return detect_distance
 
 
 def motor_turn_left():
-    p.start(0)
+    p.start(5)
     time.sleep(servo_turning_time)
     p.stop()
     pass
 
 
 def motor_turn_right():
-    p.start(100)
+    p.start(10)
     time.sleep(servo_turning_time)
     p.stop()
     pass
 
 
 def motor_netural():
-    p.start(7)  #dutycycle of netural
+    p.start(7.5)  #dutycycle of netural
     time.sleep(servo_turning_time)
     p.stop()
     pass
@@ -96,7 +98,6 @@ def motor_stop():
     a2.stop()
     b1.stop()
     b2.stop()
-    GPIO.output(outputpin,GPIO.LOW)
     pass
 
 
@@ -140,5 +141,9 @@ def collision_prevention_system():
             b2.stop()
 
 def testing_deletlater():
-    print(detect_distance)
-    print(sensor_infrared)
+    global detect_distance,sensor_infrared
+    detect_distance = 0
+    sensor_infrared = 0
+    while True:
+            print(detect_distance)
+            print(sensor_infrared)

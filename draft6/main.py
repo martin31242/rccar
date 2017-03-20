@@ -22,7 +22,7 @@ urls = (
         '/source_code', 'Sourcecode',
         '/logoff', 'Logoff',
         '/stopserver', 'Stopserver',
-        '', '',
+        '/result_sensor_ultrasonic', 'Result_sensor_ultrasonic',
         '', '',
         '', '',
 
@@ -60,9 +60,7 @@ class Login:
 
 class Page_one:
         def GET(self):
-
             return render.page_one()
-
 
         def POST(self):
             return render.page_one()
@@ -94,6 +92,7 @@ class Start:
 
 class Backward:
     def GET(self):
+        sensor.motor_backward()
         sensor.motor_backward()
         print("backward")
         return "backward"
@@ -129,10 +128,8 @@ class Stopserver:
     def GET(self):
         return exit()
 
+class Result_sensor_ultrasonic:
+    def GET(self):
+        return sensor.sensor_ultrasonic()
 if __name__ == "__main__" :
-    webserver = Thread(target = app.run)
-    collision_system = Thread(target = sensor.collision_prevention_system)
-    webserver.start()
-    collision_system.start()
-    qwe = Thread(target = testing_deletlater())
-    qwe.start()
+    app.run()

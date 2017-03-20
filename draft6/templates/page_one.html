@@ -2,9 +2,6 @@
 <html lang="en-us">
 <head>
 <link rel="stylesheet" href="/static/styles.css" type="text/css" >
-
-
-
 <script type="text/javascript" src="/static/jquery.js"></script>
 <script type="text/javascript">
         jQuery(document).ready(function(){
@@ -56,6 +53,29 @@
 
 </script>
 
+<script>
+function autorefresh(){
+jQuery(document).ready(function(){
+       jQuery.get("/result_sensor_ultrasonic",function(result){
+          jQuery("#ultra_sonic").val(result);
+          });
+        });
+}
+
+setInterval(function(){autorefresh()},100);
+
+</script>
+
+<script>
+var myVar = setInterval(function(){ myTimer() }, 500);
+
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+    document.getElementById("timer").innerHTML = t;
+}
+</script>
+
 <script type="text/javascript">
 function displayunicode(e){
     var unicode=e.keyCode? e.keyCode : e.charCode
@@ -85,6 +105,7 @@ function controlmethod_controller() {
 <div class="grid">
     <div class="pageheader">
         <h1 align = "center">RC car control user interface</h1>
+        <p align="right" id="timer"></p>
     </div>
     <div class="leftmenu">
         <strong >menu</strong><br><br>
@@ -123,6 +144,7 @@ function controlmethod_controller() {
     </div>
 	<div class="carstatus">
 	<P>Speed:<meter value="0.35"></meter>  Battery status:<meter value="0.8"></meter> Signal strength:<meter value="0.9"></meter> Last Input:<input type = "text" id = "text1" readonly></p>
+    <p>Distance(ultra sonic):<input type = "text" id = "ultra_sonic" readonly></p>
 	</div>
     <div class="control">
         <h2 align="middle">Control</h2>
