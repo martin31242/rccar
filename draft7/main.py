@@ -1,10 +1,10 @@
 import web
 from web import form
 import socket
-import sensor
 import RPi.GPIO as GPIO
 import time
 from threading import Thread
+from threading import Lock
 localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
 print(localhost)
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, sensor_infrared, sensor_on, gpiodidstartup
@@ -40,7 +40,7 @@ urls = (
         '/stop', 'Stop',
         '/backward', 'Backward',
         '/about', 'About',
-        '/setting','Setting',
+        '/setting', 'Setting',
         '/updatelog', 'Updatelog',
         '/source_code', 'Sourcecode',
         '/logoff', 'Logoff',
@@ -84,6 +84,7 @@ class Page_one:
 
 class Left:
     def GET(self):
+        global move_left,move_right,move_netural,move_forward,move_backward,move_stop,autostop
         move_left = True
         move_right = False
         move_netural = False
@@ -97,6 +98,7 @@ class Left:
 
 class Right:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = True
         move_netural = False
@@ -110,6 +112,7 @@ class Right:
 
 class Forward:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = True
@@ -123,6 +126,7 @@ class Forward:
 
 class Start:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -136,6 +140,7 @@ class Start:
 
 class Backward:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = True
@@ -149,6 +154,7 @@ class Backward:
 
 class Stop:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -162,6 +168,7 @@ class Stop:
 
 class About:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -174,6 +181,7 @@ class About:
 
 class Setting:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -186,6 +194,7 @@ class Setting:
 
 class Updatelog:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -198,6 +207,7 @@ class Updatelog:
 
 class Sourcecode:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -210,6 +220,7 @@ class Sourcecode:
 
 class Logoff:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         global gpiodidstartup
         move_left = False
         move_right = False
@@ -225,6 +236,7 @@ class Logoff:
 
 class Stopserver:
     def GET(self):
+        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
         move_left = False
         move_right = False
         move_netural = False
@@ -241,7 +253,6 @@ class Result_sensor_ultrasonic:
 
 def motormovement():
     while True:
-        while gpiodidstartup:
             t1 = Thread(target=motor_turn_left)
             t2 = Thread(target=motor_turn_right)
             t3 = Thread(target=motor_netural)
@@ -263,7 +274,7 @@ def motormovement():
             t5.start()
             t6.start()
             t7.start()
-            return
+            time.sleep(0.01)
 
 
 def gpio_startup():
@@ -325,10 +336,10 @@ def sensor_ultrasonic():
 
 
 def motor_turn_left():
-    while move_left:
-        p.start(5)
-        time.sleep(servo_turning_time)
-        p.stop()
+     while move_left:
+         p.start(5)
+         time.sleep(servo_turning_time)
+         p.stop()
 
 
 def motor_turn_right():
@@ -373,18 +384,8 @@ def motor_backward(carspeed = carspeed):
         b2.start(carspeed)
 
 
-def change_speed(direction,speed):  #1 for forward 2 for backward, anyother number will result in error
-    carspeed = speed
-    if direction == 1:
-        motor_forward(carspeed)
-    elif direction == 2:
-        motor_backward(carspeed)
-    else:
-        print('Direction error')
-
-
 def collision_prevention_system():
-    while autostop:
+     while autostop:
         if detect_distance < 10:
             a1.stop()
             b1.stop()
