@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<link rel="stylesheet" href="/static/styles.css" type="text/css" >
+<script type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#start").click(function(){
+          jQuery.get("/start",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+</script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#left").click(function(){
+          jQuery.get("/left",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+</script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#right").click(function(){
+          jQuery.get("/right",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+</script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#stop").click(function(){
+          jQuery.get("/stop",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+</script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#forward").click(function(){
+          jQuery.get("/forward",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+</script>
+<script type="text/javascript">
+        jQuery(document).ready(function(){
+        jQuery("#backward").click(function(){
+          jQuery.get("/backward",function(result){
+             jQuery("#text1").val(result);
+          });
+        });});
+
+</script>
+
+<script>
+function autorefresh(){
+jQuery(document).ready(function(){
+       jQuery.get("/result_sensor_ultrasonic",function(result){
+          jQuery("#ultra_sonic").val(result);
+          });
+        });
+}
+
+setInterval(function(){autorefresh()},100);
+
+</script>
+
+<script>
+var myVar = setInterval(function(){ myTimer() }, 500);
+
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+    document.getElementById("timer").innerHTML = t;
+}
+</script>
+
+<script type="text/javascript">
+function displayunicode(e){
+    var unicode=e.keyCode? e.keyCode : e.charCode
+    alert(unicode)
+}
+
+function controlmethod_button() {
+	document.getElementById("123").style.display = "block";
+	document.getElementById("456").style.display = "none";
+	document.getElementById("789").style.display = "none";
+}
+function controlmethod_slider() {
+	document.getElementById("123").style.display = "none";
+	document.getElementById("456").style.display = "block";
+	document.getElementById("789").style.display = "none";
+}
+function controlmethod_controller() {
+	document.getElementById("123").style.display = "none";
+	document.getElementById("456").style.display = "none";
+	document.getElementById("789").style.display = "block";
+}
+</script>
+
+<title>RC CAR</title>
+</head>
+<body>
+<div class="grid">
+    <div class="pageheader">
+        <h1 align = "center">RC car control user interface</h1>
+        <p align="right" id="timer"></p>
+    </div>
+    <div class="leftmenu">
+        <strong >menu</strong><br><br>
+        <ul>
+		<li><a href="/about" target ="">About</a></li><br>
+		<li><a href="/control" target ="">Control</a></li><br>
+		<li><a href="" target ="">Present</a></li><br>
+		<li><a href="/setting" target ="">Setting</a></li><br>
+		<li><a href="/source_code" target ="">Source code</a></li><br>
+		<li><a href="" target ="">Issue report</a></li><br>
+		<li><a href="/updatelog" target ="">Update log</a></li><br>
+		<li><a href="/logoff" target ="">Log Off</a></li><br>
+        </ul>
+    </div>
+    <div class="camera">
+        <h2 align = "center">camera module</h2>
+        <p>camera</p>
+		<form name="main" method="post">
+        <table align="middle">
+	    <tr>
+            <td><button type="Button" class="button"> Camera ON/OFF</button></td>
+            <td align="center" ><button class="button" type="Button">Recording</button></td>
+            <td><select name="cars">
+				<option value="1080p">1080p</option>
+				<option value="720p">720p</option>
+				<option value="480p">480p</option>
+				</select></td>
+        </tr>
+		</table>
+		</form>
+    </div>
+    <div class="descrip">
+            <h2 align = "center">description</h2>
+            <p>Welcome to the web page, just press any button you want, there should be a description on button.</p>
+            <p>Please sure log off when the session is done.</p>
+    </div>
+	<div class="carstatus">
+	<P>Speed:<meter value="0.35"></meter>  Battery status:<meter value="0.8"></meter> Signal strength:<meter value="0.9"></meter> Last Input:<input type = "text" id = "text1" readonly></p>
+    <p>Distance(ultra sonic):<input type = "text" id = "ultra_sonic" readonly></p>
+	</div>
+    <div class="control">
+        <h2 align="middle">Control</h2>
+		<form>
+			<input type="radio" name="control_method" value="button" checked onchange="controlmethod_button()"> button
+			<input type="radio" name="control_method" value="slider" onchange="controlmethod_slider()"> slider
+			<input type="radio" name="control_method" value="controller" onchange="controlmethod_controller()"> controller
+		</form> 
+        <form name="main" method="post">
+        <table align="left">
+        <tbody id= "123" style="display:block">
+	    <tr>
+            <td><button class="button" type="Button" id="start">Start</button></td>
+            <td align="center" ><button class="button" type="Button" id="forward">Forward</button></td>
+            <td><button class="button" type="Button" id="stop">Stop</button></td>
+         </tr>
+         <tr>
+            <td><button class="button" type="Button" id="left">Left</button></td>
+            <td align="center" ><button class="button" type="Button" id="backward">Backward</button></td>
+            <td><button class="button" type="Button" id="right">Right</button></td>
+         </tr>
+         <tr>
+            <td><button class="button" type="Button">light</button></td>
+            <td align="center" ><button class="button" type="Button">?</button></td>
+            <td><button class="button" type="Button">?</button></td>
+         </tr>
+        </tbody>
+    </table>
+    </form>
+    <form style="display:none" id="456">
+        <input type="text" size="2" maxlength="1" onkeyup="displayunicode(event); this.select()" />
+    </form>
+    </div>
+
+</div>
+
+
+</body>
+</html>
