@@ -1,8 +1,9 @@
 import RPi.GPIO as GPIO
 import time
+from threading import Thread
 
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, sensor_infrared, sensor_on, gpiodidstartup
-infrared = 11
+global move_left,move_right,move_forward,move_backward,sensor_on,move_netural,move_stop,autostop
 ultrasonic = 8
 servomotor = 12
 motor_L1 = 19
@@ -13,6 +14,28 @@ servo_turning_time = 0.5
 carspeed = 100
 sensor_infrared = False
 sensor_on = True
+move_left = False
+move_right = False
+move_netural = False
+move_forward = False
+move_backward = False
+sensor_on = False
+move_stop = False
+autostop = True
+t1 = Thread(target=motor_turn_left)
+t2 = Thread(target=motor_turn_right)
+t3 = Thread(target=motor_netural)
+t4 = Thread(target=motor_stop)
+t5 = Thread(target=motor_forward)
+t6 = Thread(target=motor_backward)
+t7 = Thread(target=collision_prevention_system)
+t1.daemon = True
+t2.daemon = True
+t3.daemon = True
+t4.daemon = True
+t5.daemon = True
+t6.daemon = True
+t7.daemon = True
 
 def gpio_startup():
     global a1,a2,b1,b2,gpiodidstartup, p
@@ -27,6 +50,13 @@ def gpio_startup():
     b2 = GPIO.PWM(motor_R2, 50)
     gpiodidstartup = True
     p = GPIO.PWM(servomotor,50)
+    t1.start()
+    t2.start()
+    t3.start()
+    t4.start()
+    t5.start()
+    t6.start()
+
 
 def gpio_end():
     GPIO.cleanup()
@@ -72,49 +102,52 @@ def sensor_ultrasonic():
 
 
 def motor_turn_left():
-    p.start(5)
-    time.sleep(servo_turning_time)
-    p.stop()
-    pass
+    while move_left:
+        p.start(5)
+        time.sleep(servo_turning_time)
+        p.stop()
 
 
 def motor_turn_right():
-    p.start(10)
-    time.sleep(servo_turning_time)
-    p.stop()
-    pass
+    while move_right:
+        p.start(10)
+        time.sleep(servo_turning_time)
+        p.stop()
 
 
 def motor_netural():
-    p.start(7.5)  #dutycycle of netural
-    time.sleep(servo_turning_time)
-    p.stop()
-    pass
+    while move_netural:
+        p.start(7.5)  #dutycycle of netural
+        time.sleep(servo_turning_time)
+        p.stop()
+
 
 
 def motor_stop():
-    p.stop()
-    a1.stop()
-    a2.stop()
-    b1.stop()
-    b2.stop()
-    pass
+    while move_stop:
+        p.stop()
+        a1.stop()
+        a2.stop()
+        b1.stop()
+        b2.stop()
+
 
 
 def motor_forward(carspeed = carspeed):
-    a1.start(0)
-    b1.start(0)
-    a1.start(carspeed)
-    b1.start(carspeed)
-    pass
+    while move_forward:
+        a1.start(0)
+        b1.start(0)
+        a1.start(carspeed)
+        b1.start(carspeed)
+
 
 
 def motor_backward(carspeed = carspeed):
-    a2.start(0)
-    b2.start(0)
-    a2.start(carspeed)
-    b2.start(carspeed)
-    pass
+    while move_backward:
+        a2.start(0)
+        b2.start(0)
+        a2.start(carspeed)
+        b2.start(carspeed)
 
 
 def change_speed(direction,speed):  #1 for forward 2 for backward, anyother number will result in error
@@ -128,22 +161,9 @@ def change_speed(direction,speed):  #1 for forward 2 for backward, anyother numb
 
 
 def collision_prevention_system():
-    sensor_infrared == False
-    sensor_on = False
-    while sensor_on:
-        sensor_ultrasonic()
-        sensor_if()
-
-        if  sensor_infrared == True:
+    while autostop:
+        if  detect_distance < 20:
             a1.stop()
             b1.stop()
             a2.stop()
             b2.stop()
-
-def testing_deletlater():
-    global detect_distance,sensor_infrared
-    detect_distance = 0
-    sensor_infrared = 0
-    while True:
-            print(detect_distance)
-            print(sensor_infrared)
