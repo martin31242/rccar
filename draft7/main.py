@@ -29,6 +29,21 @@ sensor_on = False
 move_stop = False
 autostop = True
 gpiodidstartup = False
+t1 = Thread(target=motor_turn_left)
+t2 = Thread(target=motor_turn_right)
+t3 = Thread(target=motor_netural)
+t4 = Thread(target=motor_stop)
+t5 = Thread(target=motor_forward)
+t6 = Thread(target=motor_backward)
+t7 = Thread(target=collision_prevention_system)
+t1.daemon = True
+t2.daemon = True
+t3.daemon = True
+t4.daemon = True
+t5.daemon = True
+t6.daemon = True
+t7.daemon = True
+
 
 urls = (
         '/','Login',
@@ -92,6 +107,7 @@ class Left:
         move_backward = False
         move_stop = False
         autostop = False
+        t2.start()
         print("left")
         return "left"
 
@@ -120,6 +136,7 @@ class Forward:
         move_backward = False
         move_stop = False
         autostop = False
+        t5.start()
         print("forward")
         return "forward"
 
@@ -162,6 +179,7 @@ class Stop:
         move_backward = False
         move_stop = False
         autostop = False
+        t4.start()
         print("stop")
         return "stop"
 
@@ -251,30 +269,6 @@ class Result_sensor_ultrasonic:
     def GET(self):
         return sensor_ultrasonic()
 
-def motormovement():
-    while True:
-            t1 = Thread(target=motor_turn_left)
-            t2 = Thread(target=motor_turn_right)
-            t3 = Thread(target=motor_netural)
-            t4 = Thread(target=motor_stop)
-            t5 = Thread(target=motor_forward)
-            t6 = Thread(target=motor_backward)
-            t7 = Thread(target=collision_prevention_system)
-            t1.daemon = True
-            t2.daemon = True
-            t3.daemon = True
-            t4.daemon = True
-            t5.daemon = True
-            t6.daemon = True
-            t7.daemon = True
-            t1.start()
-            t2.start()
-            t3.start()
-            t4.start()
-            t5.start()
-            t6.start()
-            t7.start()
-            time.sleep(0.01)
 
 
 def gpio_startup():
@@ -369,17 +363,12 @@ def motor_stop():
 
 def motor_forward(carspeed = carspeed):
     while move_forward:
-        a1.start(0)
-        b1.start(0)
         a1.start(carspeed)
         b1.start(carspeed)
 
 
 
 def motor_backward(carspeed = carspeed):
-    while move_backward:
-        a2.start(0)
-        b2.start(0)
         a2.start(carspeed)
         b2.start(carspeed)
 
@@ -394,7 +383,4 @@ def collision_prevention_system():
 
 
 if __name__ == "__main__" :
-    motor = Thread(target=motormovement)
-    motor.daemon = True
-    motor.start()
-    app.run()
+    app.run(),
