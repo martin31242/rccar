@@ -1,0 +1,33 @@
+$def with (form,left,right,foward,backward,start,stop)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form name="main" method="post">
+<h1 align = "center">RC car</h1>
+<table align="center">
+	<tr>
+        <td>$:start.render()</td>
+        <td align="center" >$:foward.render()</td>
+        <td>$:stop.render()</td>
+    </tr>
+    <tr>
+        <td> $:left.render()</td>
+        <td align="center">$:backward.render()</td>
+        <td>$:right.render()</td>
+    </tr>
+    <tr>
+        <td><button style="height:30px;width:80px" type="Button">Trick 1</button></td>
+        <td align="center" ><button style="height:30px;width:80px" type="Button">Trick 2</button></td>
+        <td><button style="height:30px;width:80px" type="Button">Trick 3</button></td>
+    </tr>
+</table>
+</form>
+</body>
+<script>
+
+</script>
+</html>

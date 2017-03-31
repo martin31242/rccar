@@ -4,19 +4,18 @@ import time
 
 
 def gpio_startup():
-    #pin number for motor===============================================================================
+
+       #pin number for motor===============================================================================
+    GPIO.setmode(GPIO.BOARD)
     global infrared,ultrasonic,servomotor,motor_L1,motor_L2,motor_R1,motor_R2,p,servo_turning_time,outputpin,a1,a2,b1,b2,carspeed,sensor_infrared,sensor_on
     infrared = 11
     ultrasonic = 8
-    servomotor = 7
+    servomotor = 12
     motor_L1 = 19
     motor_L2 = 21
     motor_R1 = 24
     motor_R2 = 26
-    a1 = GPIO.PWM(motor_L1, 50)
-    a2 = GPIO.PWM(motor_L2, 50)
-    b1 = GPIO.PWM(motor_R1, 50)
-    b2 = GPIO.PWM(motor_R2, 50)
+
     servo_turning_time = 0.5
     carspeed = 100
     sensor_infrared = False
@@ -25,10 +24,13 @@ def gpio_startup():
     inputpin = [infrared,ultrasonic]
     outputpin = [servomotor,motor_L1,motor_L2,motor_R1,motor_R2]
 
-    GPIO.setmode(GPIO.BOARD)
+
     GPIO.setup(inputpin,GPIO.IN)
     GPIO.setup(outputpin,GPIO.OUT,initial = GPIO.LOW)
-
+    a1 = GPIO.PWM(motor_L1, 50)
+    a2 = GPIO.PWM(motor_L2, 50)
+    b1 = GPIO.PWM(motor_R1, 50)
+    b2 = GPIO.PWM(motor_R2, 50)
 
 def gpio_end():
     GPIO.cleanup()
@@ -51,14 +53,14 @@ def sensor_ultrasonic():
 
 
 def motor_turn_left():
-    p.start(?)
+    p.start(0)
     time.sleep(servo_turning_time)
     p.stop()
     pass
 
 
 def motor_turn_right():
-    p.start(?)
+    p.start(100)
     time.sleep(servo_turning_time)
     p.stop()
     pass
@@ -77,7 +79,7 @@ def motor_stop():
     a2.stop()
     b1.stop()
     b2.stop()
-    GPIO.out(outputpin,GPIO.LOW)
+    GPIO.output(outputpin,GPIO.LOW)
     pass
 
 
@@ -108,8 +110,9 @@ def change_speed(direction,speed):  #1 for forward 2 for backward, anyother numb
 
 
 def collision_prevention_system():
+    sensor_infrared == False
     while sensor_on:
-        if  sensor_infrared = True:
+        if  sensor_infrared == True:
             a1.stop()
             b1.stop()
             pass

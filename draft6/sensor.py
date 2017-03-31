@@ -1,10 +1,10 @@
 import RPi.GPIO as GPIO
 import time
-from threading import Thread
 
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, sensor_infrared, sensor_on, gpiodidstartup
 global move_left,move_right,move_forward,move_backward,sensor_on,move_netural,move_stop,autostop
 ultrasonic = 8
+infrared = 11
 servomotor = 12
 motor_L1 = 19
 motor_L2 = 21
@@ -22,20 +22,7 @@ move_backward = False
 sensor_on = False
 move_stop = False
 autostop = True
-t1 = Thread(target=motor_turn_left)
-t2 = Thread(target=motor_turn_right)
-t3 = Thread(target=motor_netural)
-t4 = Thread(target=motor_stop)
-t5 = Thread(target=motor_forward)
-t6 = Thread(target=motor_backward)
-t7 = Thread(target=collision_prevention_system)
-t1.daemon = True
-t2.daemon = True
-t3.daemon = True
-t4.daemon = True
-t5.daemon = True
-t6.daemon = True
-t7.daemon = True
+gpiodidstartup = False
 
 def gpio_startup():
     global a1,a2,b1,b2,gpiodidstartup, p
@@ -50,12 +37,6 @@ def gpio_startup():
     b2 = GPIO.PWM(motor_R2, 50)
     gpiodidstartup = True
     p = GPIO.PWM(servomotor,50)
-    t1.start()
-    t2.start()
-    t3.start()
-    t4.start()
-    t5.start()
-    t6.start()
 
 
 def gpio_end():

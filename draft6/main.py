@@ -2,7 +2,6 @@ import web
 from web import form
 import socket
 import sensor
-import time
 from threading import Thread
 localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
 print(localhost)
@@ -187,6 +186,7 @@ class Sourcecode:
 
 class Logoff:
     def GET(self):
+        global gpiodidstartup
         sensor.move_left = False
         sensor.move_right = False
         sensor.move_netural = False
@@ -195,6 +195,7 @@ class Logoff:
         sensor.move_stop = False
         sensor.autostop = False
         sensor.gpio_end()
+        gpiodidstartup = False
         return render.logoff()
 
 
@@ -214,7 +215,36 @@ class Result_sensor_ultrasonic:
     def GET(self):
         return sensor.sensor_ultrasonic()
 
+def motormovement():
+    while True:
+        while sensor.gpiodidstartup:
+            t1 = Thread(target=sensor.motor_turn_left)
+            t2 = Thread(target=sensor.motor_turn_right)
+            t3 = Thread(target=sensor.motor_netural)
+            t4 = Thread(target=sensor.motor_stop)
+            t5 = Thread(target=sensor.motor_forward)
+            t6 = Thread(target=sensor.motor_backward)
+            t7 = Thread(target=sensor.collision_prevention_system)
+            t1.daemon = True
+            t2.daemon = True
+            t3.daemon = True
+            t4.daemon = True
+            t5.daemon = True
+            t6.daemon = True
+            t7.daemon = True
+            t1.start()
+            t2.start()
+            t3.start()
+            t4.start()
+            t5.start()
+            t6.start()
+            t7.start()
+            return
     
 if __name__ == "__main__" :
-    sensor.t7.start()
+    global temp_variable
+    temp_variable = True
+    motor = Thread(target=motormovement)
+    motor.daemon = True
+    motor.start()
     app.run()

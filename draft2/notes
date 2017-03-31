@@ -1,0 +1,12 @@
+https://groups.google.com/forum/#!searchin/webpy/php%7Csort:relevance/webpy/A6XAycnao_o/mv9PnncknsYJ
+
+1.user requests http://localhost/home
+2.web.py delivers the home page via render()
+3.browser draws the home page html, and processes any onload() javascript
+4.(page is now idle, waiting for user interaction)
+5.user clicks something, javascript function evaluates what was clicked and decides to request more data
+6.javascript creates and issues an XmlHttpRequest (or in jQuery... $.ajax() )
+7.web.py handles the request, let's say it was to /home_tab_2 (web.py doesn't care whether or not this is an ajax request or a traditional page request... doesn't matter... it's just a different url handler)
+8.your handler will most likely build some html or json data (your tab content) to send back
+9.in the browser, javascript receives the response content from the request
+10.javascript updates the page (with element.innerHTML() or in jquery $(element).append() or whatever)

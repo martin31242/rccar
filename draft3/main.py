@@ -1,15 +1,11 @@
 import web
 from web import form
 import socket
-import sensor
-import time
-#from threading import Thread
-localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
-print(localhost)
+print("http://" + socket.gethostbyname(socket.gethostname()) + ":8080")
 
 urls = (
         '/','Login',
-        '/control','Page_one',
+        '/page_one','Page_one',
         '/left', 'Left',
         '/right', 'Right',
         '/forward', 'Forward',
@@ -17,11 +13,11 @@ urls = (
         '/stop', 'Stop',
         '/backward', 'Backward',
         '/about', 'About',
-        '/setting','Setting',
-        '/updatelog', 'Updatelog',
-        '/source_code', 'Sourcecode',
-        '/logoff', 'Logoff',
-        '/stopserver', 'Stopserver',
+        '','',
+        '', '',
+        '', '',
+        '', '',
+        '', '',
         '', '',
         '', '',
         '', '',
@@ -55,8 +51,8 @@ class Login:
             if not loginform.validates():
                 return render.login(loginform)
             else:
-                sensor.gpio_startup()
-                return web.seeother('/control')
+                session.logged_in = True
+                return web.seeother('/page_one')
 
 class Page_one:
         def GET(self):
@@ -84,8 +80,6 @@ class Right:
 
 class Forward:
     def GET(self):
-        sensor.motor_netural()
-        sensor.motor_forward()
         print("forward")
         return "forward"
 
@@ -101,37 +95,13 @@ class Backward:
 
 class Stop:
     def GET(self):
-        sensor.motor_stop()
         print("stop")
         return "stop"
 
-class About:
-    def GET(self):
-        return render.about()
 
-class Setting:
-    def GET(self):
-        return render.setting()
 
-class Updatelog:
-    def GET(self):
-        return render.updatelog()
 
-class Sourcecode:
-    def GET(self):
-        return render.source_code()
 
-class Logoff:
-    def GET(self):
-        sensor.gpio_end()
-        return render.logoff()
-
-class Stopserver:
-    def GET(self):
-        return exit()
 
 if __name__ == "__main__" :
-    t1 = Thread(target = app.run())
-    t2 = Thread(target = sensor.collision_prevention_system())
-    t1.start()
-    t2.start()
+    app.run()

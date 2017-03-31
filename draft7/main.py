@@ -16,7 +16,7 @@ motor_L1 = 19
 motor_L2 = 21
 motor_R1 = 24
 motor_R2 = 26
-servo_turning_time = 0.5
+servo_turning_time = 1
 carspeed = 100
 sensor_infrared = False
 sensor_on = True
@@ -29,20 +29,7 @@ sensor_on = False
 move_stop = False
 autostop = True
 gpiodidstartup = False
-t1 = Thread(target=motor_turn_left)
-t2 = Thread(target=motor_turn_right)
-t3 = Thread(target=motor_netural)
-t4 = Thread(target=motor_stop)
-t5 = Thread(target=motor_forward)
-t6 = Thread(target=motor_backward)
-t7 = Thread(target=collision_prevention_system)
-t1.daemon = True
-t2.daemon = True
-t3.daemon = True
-t4.daemon = True
-t5.daemon = True
-t6.daemon = True
-t7.daemon = True
+
 
 
 urls = (
@@ -75,200 +62,6 @@ loginform = form.Form(
     form.Checkbox('I am not a robot'))
 
 render = web.template.render('templates/')
-
-
-class Login:
-        def GET(self):
-            return render.login(loginform)
-
-        def POST(self):
-            if not loginform.validates():
-                return render.login(loginform)
-            else:
-                gpio_startup()
-                return web.seeother('/control')
-
-
-class Page_one:
-        def GET(self):
-            return render.page_one()
-
-        def POST(self):
-            return render.page_one()
-
-
-class Left:
-    def GET(self):
-        global move_left,move_right,move_netural,move_forward,move_backward,move_stop,autostop
-        move_left = True
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        t2.start()
-        print("left")
-        return "left"
-
-
-class Right:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = True
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        print("right")
-        return "right"
-
-
-class Forward:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = True
-        move_forward = True
-        move_backward = False
-        move_stop = False
-        autostop = False
-        t5.start()
-        print("forward")
-        return "forward"
-
-
-class Start:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        print("start")
-        return "start"
-
-
-class Backward:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = True
-        move_forward = False
-        move_backward = True
-        move_stop = False
-        autostop = False
-        print("backward")
-        return "backward"
-
-
-class Stop:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        t4.start()
-        print("stop")
-        return "stop"
-
-
-class About:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        return render.about()
-
-
-class Setting:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        return render.setting()
-
-
-class Updatelog:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        return render.updatelog()
-
-
-class Sourcecode:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        return render.source_code()
-
-
-class Logoff:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        global gpiodidstartup
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        gpio_end()
-        gpiodidstartup = False
-        return render.logoff()
-
-
-class Stopserver:
-    def GET(self):
-        global move_left, move_right, move_netural, move_forward, move_backward, move_stop, autostop
-        move_left = False
-        move_right = False
-        move_netural = False
-        move_forward = False
-        move_backward = False
-        move_stop = False
-        autostop = False
-        return exit()
-
-
-class Result_sensor_ultrasonic:
-    def GET(self):
-        return sensor_ultrasonic()
-
 
 
 def gpio_startup():
@@ -326,34 +119,34 @@ def sensor_ultrasonic():
     # That was the distance there and back so halve the value
     distance = distance / 2
     detect_distance = distance
+    if detect_distance < 5:
+        motor_stop()
     return detect_distance
 
 
 def motor_turn_left():
-     while move_left:
-         p.start(5)
-         time.sleep(servo_turning_time)
-         p.stop()
+        p.start(0)
+        p.ChangeDutyCycle(5)
+        time.sleep(servo_turning_time)
+        p.start(0)
 
 
 def motor_turn_right():
-    while move_right:
-        p.start(10)
+        p.start(0)
+        p.ChangeDutyCycle(10)
         time.sleep(servo_turning_time)
-        p.stop()
+        p.start(0)
 
 
 def motor_netural():
-    while move_netural:
-        p.start(7.5)  #dutycycle of netural
+        p.start(0)
+        p.ChangeDutyCycle(7.5)
         time.sleep(servo_turning_time)
-        p.stop()
+        p.start(0)
 
 
 
 def motor_stop():
-    while move_stop:
-        p.stop()
         a1.stop()
         a2.stop()
         b1.stop()
@@ -362,7 +155,6 @@ def motor_stop():
 
 
 def motor_forward(carspeed = carspeed):
-    while move_forward:
         a1.start(carspeed)
         b1.start(carspeed)
 
@@ -374,7 +166,6 @@ def motor_backward(carspeed = carspeed):
 
 
 def collision_prevention_system():
-     while autostop:
         if detect_distance < 10:
             a1.stop()
             b1.stop()
@@ -382,5 +173,118 @@ def collision_prevention_system():
             b2.stop()
 
 
+
+class Login:
+        def GET(self):
+            return render.login(loginform)
+
+        def POST(self):
+            if not loginform.validates():
+                return render.login(loginform)
+            else:
+                gpio_startup()
+                return web.seeother('/control')
+
+
+class Page_one:
+        def GET(self):
+            return render.page_one()
+
+        def POST(self):
+            return render.page_one()
+
+
+class Left:
+    def GET(self):
+        motor_turn_left()
+        print("left")
+        return "left"
+
+
+class Right:
+    def GET(self):
+        motor_turn_right()
+        print("right")
+        return "right"
+
+
+class Forward:
+    def GET(self):
+        motor_stop()
+        t3 = Thread(target=motor_netural)
+        t5 = Thread(target=motor_forward)
+        t3.daemon = True
+        t5.daemon = True
+        t3.start()
+        t5.start()
+        t3.join()
+        t5.join()
+        print("forward")
+        return "forward"
+
+
+class Start:
+    def GET(self):
+        print("start")
+        return "start"
+
+
+class Backward:
+    def GET(self):
+        motor_stop()
+        motor_backward()
+        print("backward")
+        return "backward"
+
+
+class Stop:
+    def GET(self):
+        motor_stop()
+        print("stop")
+        return "stop"
+
+
+class About:
+    def GET(self):
+        motor_stop()
+        return render.about()
+
+
+class Setting:
+    def GET(self):
+        motor_stop()
+        return render.setting()
+
+
+class Updatelog:
+    def GET(self):
+        motor_stop()
+        return render.updatelog()
+
+
+class Sourcecode:
+    def GET(self):
+        motor_stop()
+        return render.source_code()
+
+
+class Logoff:
+    def GET(self):
+        motor_stop()
+        gpio_end()
+        return render.logoff()
+
+
+class Stopserver:
+    def GET(self):
+        motor_stop()
+        return exit()
+
+
+class Result_sensor_ultrasonic:
+    def GET(self):
+        return sensor_ultrasonic()
+
+
 if __name__ == "__main__" :
-    app.run(),
+    app.run()

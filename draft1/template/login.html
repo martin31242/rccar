@@ -1,0 +1,15 @@
+$def with (form)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form name="main" method="post">
+    $if not form.valid: <p class="error">Try again:</p>
+    $:form.render()
+<input type="submit" value="Submit" />
+</form>
+</body>
+</html>

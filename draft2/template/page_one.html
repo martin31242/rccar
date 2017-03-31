@@ -1,0 +1,99 @@
+$def with (form,left_form,right_form,foward_form,backward_form,start_form,stop_form,lastpress_form)
+<!DOCTYPE php>
+<html lang="en-us">
+<head>
+<style>
+div.grid{
+display:block;
+width: 1000px;
+overflow:auto
+margin: 30px auto 0 auto;
+background-color: rgba(255, 0, 0, 0.3);
+}
+div.pageHeader{
+float:left;
+height:200px;
+width:900px;
+background-color: rgba(0, 0, 255, 0.3);
+}
+div.leftmenu{
+float:left;
+height:600px;
+width:150px;
+background-color: rgba(150, 20, 0, 0.3);
+}
+div.content1{
+float:left;
+height:400px;
+width:400px;
+background-color: rgba(100, 0, 0, 0.3);
+}
+div.content2{
+float:left;
+height:400px;
+width:400px;
+background-color: rgba(255, 255, 0, 0.3);
+}
+div.content3{
+float:left;
+height:200px;
+width:600px;
+background-color: rgba(255, 0, 255, 0.3);
+}
+</style>
+</head>
+<body>
+
+<div class="grid">
+    <div class="pageheader">
+        <h1 align = "center">RC car control user interface</h1>
+    </div>
+    <div class="leftmenu">
+        <p>menu</p>
+    </div>
+    <div class="content1">
+        <h2 align = "center">camera module</h2>
+        <p>camera</p>
+    </div>
+    <div class="content2">
+        <h2 align="center">control</h2>
+        <form name="main" method="post">
+        <table align="center">
+	    <tr>
+         <td>$:start_form.render()</td>
+         <td align="center" >$:foward_form.render()</td>
+         <td>$:stop_form.render()</td>
+         </tr>
+         <tr>
+             <td> $:left_form.render()</td>
+             <td align="center">$:backward_form.render()</td>
+             <td>$:right_form.render()</td>
+         </tr>
+        <tr>
+            <td><button style="height:30px;width:80px" type="Button">Trick 1</button></td>
+            <td align="center" ><button style="height:30px;width:80px" type="Button">Trick 2</button></td>
+            <td><button style="height:30px;width:80px" type="Button">Trick 3</button></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td align="center"><p>last button pressed: $lastpress_form</p></td>
+            <td></td>
+        </tr>
+    </table>
+    </form>
+    </div>
+    <div class="content3">
+            <h2 align = "center">description</h2>
+            <p>sdrtyhdftykjfgvylod6tjuty</p>
+            <p>dsrtnyrtunsrtundrsurdtudrtuhrturdu</p>
+    </div>
+
+</div>
+
+
+</body>
+</html>
+
+
+
+
