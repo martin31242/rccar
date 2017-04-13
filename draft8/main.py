@@ -1,15 +1,10 @@
-import web
+import web,socket,time,Adafruit_ADS1x15,tempvar
 from web import form
-import socket
 import RPi.GPIO as GPIO
-import time
-import Adafruit_ADS1x15
 from threading import Thread
-from threading import Lock
 localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
 print(localhost)
-global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, sensor_infrared, sensor_on, gpiodidstartup
-global move_left,move_right,move_forward,move_backward,sensor_on,move_netural,move_stop,autostop
+global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, gpiodidstartup
 ultrasonic = 8
 infrared = 11
 servomotor = 12
@@ -19,16 +14,6 @@ motor_R1 = 24
 motor_R2 = 26
 servo_turning_time = 1
 carspeed = 100
-sensor_infrared = False
-sensor_on = True
-move_left = False
-move_right = False
-move_netural = False
-move_forward = False
-move_backward = False
-sensor_on = False
-move_stop = False
-autostop = True
 gpiodidstartup = False
 adc = Adafruit_ADS1x15.ADS1115()
 
@@ -49,10 +34,10 @@ urls = (
         '/logoff', 'Logoff',
         '/stopserver', 'Stopserver',
         '/result_sensor_ultrasonic', 'Result_sensor_ultrasonic',
-		'/result_sensor_infrared','Result_sensor_infrared',
-		'/toggle_ultrasonic','Toggle_ultrasonic',
-		'/toggle_infrared','Toggle_infrared',		
-		'/(.*)','Error_page'
+        '/result_sensor_infrared','Result_sensor_infrared',
+        '/toggle_ultrasonic','Toggle_ultrasonic',
+        '/toggle_infrared','Toggle_infrared',
+        '/(.*)','Error_page'
 )
 
 app = web.application(urls, globals())
@@ -90,43 +75,46 @@ def gpio_end():
 
 
 def sensor_infrared():
-    if variable.sensor_infrared:
-		GAIN = 1
-		values = adc.read_adc(0, gain=GAIN)
-		return values
-	else:
-		return "N/A"
+    if tempvar.sensor_status_infrared:
+        GAIN = 1
+        values = adc.read_adc(0, gain=GAIN)
+        values = values / 250
+        if values > 95:
+            motor_stop()
+        return values
+    else:
+        return "N/A"
 
-		
+
 def sensor_ultrasonic():
-	if variable.sensor_ultrasonic:
-		global detect_distance
-		GPIO.setup(ultrasonic, GPIO.OUT)
-		GPIO.output(ultrasonic, GPIO.HIGH)
-		time.sleep(0.00001)
-		GPIO.output(ultrasonic, GPIO.LOW)
-		start = time.time()
-		count = time.time()
-		GPIO.setup(ultrasonic, GPIO.IN)
-		while GPIO.input(ultrasonic) == 0 and time.time() - count < 0.1:
-			start = time.time()
-		count = time.time()
-		stop = count
-		while GPIO.input(ultrasonic) == 1 and time.time() - count < 0.1:
-			stop = time.time()
-		# Calculate pulse length
-		elapsed = stop - start
-		# Distance pulse travelled in that time is time
-		# multiplied by the speed of sound (cm/s)
-		distance = elapsed * 34000
-		# That was the distance there and back so halve the value
-		distance = distance / 2
-		detect_distance = distance
-		if detect_distance < 5:
-			motor_stop()
-		return detect_distance
-	else:
-		return "N/A"
+    if tempvar.sensor_status_ultrasonic:
+        global detect_distance
+        GPIO.setup(ultrasonic, GPIO.OUT)
+        GPIO.output(ultrasonic, GPIO.HIGH)
+        time.sleep(0.00001)
+        GPIO.output(ultrasonic, GPIO.LOW)
+        start = time.time()
+        count = time.time()
+        GPIO.setup(ultrasonic, GPIO.IN)
+        while GPIO.input(ultrasonic) == 0 and time.time() - count < 0.1:
+            start = time.time()
+        count = time.time()
+        stop = count
+        while GPIO.input(ultrasonic) == 1 and time.time() - count < 0.1:
+            stop = time.time()
+        # Calculate pulse length
+        elapsed = stop - start
+        # Distance pulse travelled in that time is time
+        # multiplied by the speed of sound (cm/s)
+        distance = elapsed * 34000
+        # That was the distance there and back so halve the value
+        distance = distance / 2
+        detect_distance = distance
+        if detect_distance < 5:
+            motor_stop()
+        return detect_distance
+    else:
+        return "N/A"
 
 
 def motor_turn_left():
@@ -282,34 +270,36 @@ class Stopserver:
         motor_stop()
         return exit()
 
-		
+
 class Error_page:
-	def GET(self)
-		return "Page URL error"
-		
-		
-class Result_sensor_ultrasonic:
     def GET(self):
+        return render.pageerror()
+
+
+class Result_sensor_ultrasonic:
+    def GET(self,*args):
         return sensor_ultrasonic()
 
-		
+
 class Result_sensor_infrared:
-	def GET(self):
-		return sensor_infrared()
+    def GET(self,*args):
+        return sensor_infrared()
 
 class Toggle_ultrasonic:
-	def GET(self):
-		if variable.sensor_status_ultrasonic:
-			variable.sensor_status_ultrasonic = False
-		else:
-			variable.sensor_status_ultrasonic = True
+    def GET(self):
+        if tempvar.sensor_status_ultrasonic:
+            tempvar.sensor_status_ultrasonic = False
+        else:
+            tempvar.sensor_status_ultrasonic = True
+
+
 class Toggle_infrared:
-	def GET(self):
-		if variable.sensor_status_infrared:
-			variable.sensor_status_infrared = False
-		else:
-			variable.sensor_status_infrared = True
-	
+    def GET(self):
+        if tempvar.sensor_status_infrared:
+            tempvar.sensor_status_infrared = False
+        else:
+            tempvar.sensor_status_infrared = True
+
+
 if __name__ == "__main__" :
-    appstart = Thread(app.run)
-	appstart.start()
+    app.run()
