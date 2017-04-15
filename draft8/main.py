@@ -2,7 +2,6 @@ import web,socket,time,Adafruit_ADS1x15,tempvar
 from web import form
 import RPi.GPIO as GPIO
 from threading import Thread
-import threading
 localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
 print(localhost)
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, gpiodidstartup
@@ -17,7 +16,6 @@ servo_turning_time = 1
 carspeed = 100
 gpiodidstartup = False
 adc = Adafruit_ADS1x15.ADS1115()
-lock = threading.lock()
 
 
 urls = (
@@ -170,7 +168,6 @@ def collision_prevention_system():
 
 
 def auto_logoff():
-    global lock
     while tempvar.count_time_logoff < 600:
         tempvar.count_time_logoff += 1
         print(tempvar.count_time_logoff)
@@ -180,7 +177,6 @@ def auto_logoff():
 
 
 def notresponding():
-    global lock
     while tempvar.count_time_stop_if_not_responding < 5:
         tempvar.count_time_stop_if_not_responding += 1
         print(tempvar.count_time_stop_if_not_responding)
@@ -197,8 +193,12 @@ class Login:
                 return render.login(loginform)
             else:
                 gpio_startup()
-                tt1.start()
-                tt2.start()
+                #tt1 = Thread(target=auto_logoff)
+                #tt2 = Thread(target=notresponding)
+                #tt1.daemon = True
+                #tt2.daemon = True
+                #tt1.start()
+                #tt2.start()
                 return web.seeother('/control')
 
 
@@ -328,8 +328,4 @@ class Toggle_infrared:
 
 
 if __name__ == "__main__" :
-    tt1=Thread(target=auto_logoff)
-    tt2=Thread(target=notresponding)
-    tt1.daemon = True
-    tt2.daemon = True
     app.run()
