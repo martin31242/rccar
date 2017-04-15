@@ -95,35 +95,35 @@ function displayunicode(e){
     var unicode=e.keyCode? e.keyCode : e.charCode;
     switch(unicode){
     case 38://button press up
-    	alert("forward");
+    	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
         break;
     case 87://button press w
-    	alert("forward");
+    	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
         break;        
     case 37://button press left
-    	alert("left");
+    	jQuery.get("/left",function(result){jQuery("#text1").val(result);});
         break;
     case 65://button press a
-    	alert("left");
+    	jQuery.get("/left",function(result){jQuery("#text1").val(result);});
         break;        
     case 40://button press down
-    	alert("backward");
+    	jQuery.get("/backward",function(result){jQuery("#text1").val(result);});
         break;
     case 83://button press s
-    	alert("backward");
+    	jQuery.get("/backward",function(result){jQuery("#text1").val(result);});
         break;       
     case 39://button press right
-    	alert("right");
+    	jQuery.get("/right",function(result){jQuery("#text1").val(result);});
         break;  
     case 68://button press d
-    	alert("right");
+    	jQuery.get("/right",function(result){jQuery("#text1").val(result);});
         break;         
     case 69://button press e
-    	alert("stop");
+    	jQuery.get("/stop",function(result){jQuery("#text1").val(result);});
         break;         
     }
 	}
-</script>	
+</script>
 <script>
 function controlmethod_button() {
 	document.getElementById("123").style.display = "block";
@@ -206,7 +206,7 @@ function change_infrared(){
         <h2 align="middle">Control</h2>
 		<form>
 			<input type="radio" name="control_method" value="button" checked onchange="controlmethod_button()"> button
-			<input type="radio" name="control_method" value="keypress" onchange="controlmethod_slider()"> slider
+			<input type="radio" name="control_method" value="keypress" onchange="controlmethod_slider()"> keyboard
 			<input type="radio" name="control_method" value="controller" onchange="controlmethod_controller()"> controller
             <input type="button" value = "ultrasonicsensor" id = "button_ultrasonicsensor" onclick="change_ultrasonicsensor()"> 
 			<input type="button" value = "infrared" id = "button_infrared" onclick="change_infrared()">
@@ -241,7 +241,5 @@ function change_infrared(){
     </div>
 
 </div>
-
-
 </body>
 </html>

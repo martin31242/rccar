@@ -2,6 +2,7 @@ import web,socket,time,Adafruit_ADS1x15,tempvar
 from web import form
 import RPi.GPIO as GPIO
 from threading import Thread
+import threading
 localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
 print(localhost)
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, gpiodidstartup
@@ -16,6 +17,7 @@ servo_turning_time = 1
 carspeed = 100
 gpiodidstartup = False
 adc = Adafruit_ADS1x15.ADS1115()
+lock = threading.lock()
 
 
 urls = (
@@ -32,6 +34,7 @@ urls = (
         '/updatelog', 'Updatelog',
         '/source_code', 'Sourcecode',
         '/logoff', 'Logoff',
+        '/route','Route'
         '/stopserver', 'Stopserver',
         '/result_sensor_ultrasonic', 'Result_sensor_ultrasonic',
         '/result_sensor_infrared','Result_sensor_infrared',
@@ -75,6 +78,11 @@ def gpio_end():
 
 
 def sensor_infrared():
+    global lock
+    lock.acquire
+    tempvar.count_time_logoff = 0
+    tempvar.count_time_stop_if_not_responding = 0
+    lock.release()
     if tempvar.sensor_status_infrared:
         GAIN = 1
         values = adc.read_adc(0, gain=GAIN)
@@ -162,6 +170,26 @@ def collision_prevention_system():
             b1.stop()
             a2.stop()
             b2.stop()
+
+
+def auto_logoff():
+    global lock
+    while tempvar.count_time_logoff < 600
+        lock.acquire
+        tempvar.count_time_logoff += 1
+        lock.release()
+        print(tempvar.count_time_logoff)
+        time.sleep(1)
+
+
+def notresponding():
+    global lock
+    while tempvar.count_time_stop_if_not_responding < 5
+        lock.acquire
+        tempvar.count_time_stop_if_not_responding += 1
+        lock.release()
+        print(tempvar.count_time_stop_if_not_responding)
+        time.sleep(1)
 
 
 class Login:
@@ -302,4 +330,10 @@ class Toggle_infrared:
 
 
 if __name__ == "__main__" :
+    tt1=thread(target=auto_logoff)
+    tt2=thread(target=notresponding)
+    tt1.daemon = True
+    tt2.daemon = True
+    tt1.start()
+    tt2.start()
     app.run()
