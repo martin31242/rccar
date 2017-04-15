@@ -1,0 +1,74 @@
+div.testing123{
+display:block;
+}  
+div.grid{
+display:block;
+width: 1000px;
+overflow:auto
+margin: 30px auto 0 auto;
+background-color: rgba(255, 0, 0, 0.3);
+}
+div.pageHeader{
+float:left;
+height:100px;
+width:900px;
+background-color: rgba(0, 0, 255, 0.3);
+}
+div.leftmenu{
+float:left;
+height:800px;
+width:130px;
+background-color: rgba(150, 20, 0, 0.3);
+}
+div.camera{
+float:left;
+height:400px;
+width:400px;
+background-color: rgba(100, 0, 0, 0.3);
+}
+div.descrip{
+float:left;
+height:400px;
+width:370px;
+background-color: rgba(255, 0, 255, 0.3);
+}
+div.control{
+float:left;
+height:400px;
+width:770px;
+background-color: rgba(255, 255, 0, 0.3);
+}
+div.carstatus{
+float:left;
+height:150px;
+width:770px;
+background-color: rgba(150, 100, 0, 0.3);
+}
+div.about{
+float:left;
+height:800px;
+width:770px;
+background-color: rgba(150, 100, 0, 0.3);
+}
+div.source_code{
+float:left;
+height:800px;
+width:770px;
+background-color: rgba(150, 100, 0, 0.3);
+}
+div.updatelog{
+float:left;
+height:800px;
+width:770px;
+background-color: rgba(150, 100, 0, 0.3);
+}
+div.setting{
+float:left;
+height:800px;
+width:770px;
+background-color: rgba(150, 100, 0, 0.3);
+}
+.button{
+height:30px;
+width:80px;
+}

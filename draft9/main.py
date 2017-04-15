@@ -1,7 +1,10 @@
-import web,time,Adafruit_ADS1x15,tempvar
+import web,socket,time,Adafruit_ADS1x15,tempvar
 from web import form
 import RPi.GPIO as GPIO
 from threading import Thread
+import threading
+localhost = "http://" + socket.gethostbyname(socket.gethostname()) + ":8080"
+print(localhost)
 global infrared, ultrasonic, servomotor, motor_L1, motor_L2, motor_R1, motor_R2, servo_turning_time, outputpin, carspeed, gpiodidstartup
 ultrasonic = 8
 infrared = 11
@@ -74,6 +77,8 @@ def gpio_end():
 
 
 def sensor_infrared():
+    tempvar.count_time_logoff = 0
+    tempvar.count_time_stop_if_not_responding = 0
     if tempvar.sensor_status_infrared:
         GAIN = 1
         values = adc.read_adc(0, gain=GAIN)
@@ -137,6 +142,7 @@ def motor_netural():
         p.start(0)
 
 
+
 def motor_stop():
         a1.stop()
         a2.stop()
@@ -154,6 +160,32 @@ def motor_backward(carspeed = carspeed):
         b2.start(carspeed)
 
 
+def collision_prevention_system():
+        if detect_distance < 10:
+            a1.stop()
+            b1.stop()
+            a2.stop()
+            b2.stop()
+
+
+def auto_logoff():
+    while tempvar.count_time_logoff < 600
+        tempvar.count_time_logoff += 1
+        print(tempvar.count_time_logoff)
+        time.sleep(1)
+    return web.seeother('/stopserver')
+
+
+def notresponding():
+    while True
+        while tempvar.count_time_stop_if_not_responding < 5
+            tempvar.count_time_stop_if_not_responding += 1
+            print(tempvar.count_time_stop_if_not_responding)
+            time.sleep(1)
+        motor_stop()
+        time.sleep(5)
+
+
 class Login:
         def GET(self):
             return render.login(loginform)
@@ -163,6 +195,12 @@ class Login:
                 return render.login(loginform)
             else:
                 gpio_startup()
+                tt1 = thread(target=auto_logoff)
+                tt2 = thread(target=notresponding)
+                tt1.daemon = True
+                tt2.daemon = True
+                tt1.start()
+                tt2.start()
                 return web.seeother('/control')
 
 
