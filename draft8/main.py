@@ -76,8 +76,6 @@ def gpio_end():
 
 
 def sensor_infrared():
-    tempvar.count_time_logoff = 0
-    tempvar.count_time_stop_if_not_responding = 0
     if tempvar.sensor_status_infrared:
         GAIN = 1
         values = adc.read_adc(0, gain=GAIN)
@@ -141,7 +139,6 @@ def motor_netural():
         p.start(0)
 
 
-
 def motor_stop():
         a1.stop()
         a2.stop()
@@ -159,31 +156,6 @@ def motor_backward(carspeed = carspeed):
         b2.start(carspeed)
 
 
-def collision_prevention_system():
-        if detect_distance < 10:
-            a1.stop()
-            b1.stop()
-            a2.stop()
-            b2.stop()
-
-
-def auto_logoff():
-    while tempvar.count_time_logoff < 600:
-        tempvar.count_time_logoff += 1
-        print(tempvar.count_time_logoff)
-        time.sleep(1)
-    motor_stop()
-    return exit()
-
-
-def notresponding():
-    while tempvar.count_time_stop_if_not_responding < 5:
-        tempvar.count_time_stop_if_not_responding += 1
-        print(tempvar.count_time_stop_if_not_responding)
-        time.sleep(1)
-    motor_stop()
-
-
 class Login:
         def GET(self):
             return render.login(loginform)
@@ -193,12 +165,6 @@ class Login:
                 return render.login(loginform)
             else:
                 gpio_startup()
-                #tt1 = Thread(target=auto_logoff)
-                #tt2 = Thread(target=notresponding)
-                #tt1.daemon = True
-                #tt2.daemon = True
-                #tt1.start()
-                #tt2.start()
                 return web.seeother('/control')
 
 
