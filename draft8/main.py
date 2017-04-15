@@ -78,11 +78,8 @@ def gpio_end():
 
 
 def sensor_infrared():
-    global lock
-    lock.acquire
     tempvar.count_time_logoff = 0
     tempvar.count_time_stop_if_not_responding = 0
-    lock.release()
     if tempvar.sensor_status_infrared:
         GAIN = 1
         values = adc.read_adc(0, gain=GAIN)
@@ -174,22 +171,21 @@ def collision_prevention_system():
 
 def auto_logoff():
     global lock
-    while tempvar.count_time_logoff < 600
-        lock.acquire
+    while tempvar.count_time_logoff < 600:
         tempvar.count_time_logoff += 1
-        lock.release()
         print(tempvar.count_time_logoff)
         time.sleep(1)
+    motor_stop()
+    return exit()
 
 
 def notresponding():
     global lock
-    while tempvar.count_time_stop_if_not_responding < 5
-        lock.acquire
+    while tempvar.count_time_stop_if_not_responding < 5:
         tempvar.count_time_stop_if_not_responding += 1
-        lock.release()
         print(tempvar.count_time_stop_if_not_responding)
         time.sleep(1)
+    motor_stop()
 
 
 class Login:
@@ -201,6 +197,8 @@ class Login:
                 return render.login(loginform)
             else:
                 gpio_startup()
+                tt1.start()
+                tt2.start()
                 return web.seeother('/control')
 
 
@@ -330,10 +328,8 @@ class Toggle_infrared:
 
 
 if __name__ == "__main__" :
-    tt1=thread(target=auto_logoff)
-    tt2=thread(target=notresponding)
+    tt1=Thread(target=auto_logoff)
+    tt2=Thread(target=notresponding)
     tt1.daemon = True
     tt2.daemon = True
-    tt1.start()
-    tt2.start()
     app.run()
