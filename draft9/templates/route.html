@@ -11,6 +11,14 @@ function myTimer() {
     document.getElementById("timer").innerHTML = t;
 }
 </script>
+<script>
+function addline(){
+    var temp = document.getElementById("routebox").innerHTML;
+    document.getElementById("routebox").innerHTML = temp +"&#13;&#10;"+'forward';
+}
+</script>
+
+
 <title>RC CAR</title>
 </head>
 <body>
@@ -32,8 +40,29 @@ function myTimer() {
 		<li><a href="/logoff" target ="">Log Off</a></li><br>
         </ul>
     </div>
-    <div class="">
-
+    <div class="descrip">
+    <h2 align = "center">description</h2>
+    </div>
+    <div classe="route">
+    <form name="main" method="post">
+    <table align="left">
+        <tbody id= "123" style="display:block">
+	    <tr>
+            <td><button class="button" type="Button" id="start">Start</button></td>
+            <td align="center" ><button class="button" type="Button" id="forward" onclick="addline()" >Forward</button></td>
+            <td><button class="button" type="Button" id="stop">Stop</button></td>
+         </tr>
+         <tr>
+            <td><button class="button" type="Button" id="left">Left</button></td>
+            <td align="center" ><button class="button" type="Button" id="backward">Backward</button></td>
+            <td><button class="button" type="Button" id="right">Right</button></td>
+         </tr>
+        </tbody>
+    </table>
+    </form>
+        <textarea id="routebox" name="message" rows="10" cols="30" style='white-space:pre'>
+            Text
+        </textarea>
     </div>
 </body>
 </html>

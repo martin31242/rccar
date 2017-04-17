@@ -51,10 +51,14 @@ loginform = form.Form(
     form.Textbox("PASSWORD",
         form.notnull,
         form.Validator('wrong', lambda x: x == "12341234")),
-    form.Checkbox('I am not a robot'))
+    form.Checkbox('I am not a robot')
+)
+
+routeform = form.Form(
+
+)
 
 render = web.template.render('templates/')
-
 
 def gpio_startup():
     global a1,a2,b1,b2,gpiodidstartup, p
@@ -169,7 +173,7 @@ def collision_prevention_system():
 
 
 def auto_logoff():
-    while tempvar.count_time_logoff < 600
+    while tempvar.count_time_logoff < 600:
         tempvar.count_time_logoff += 1
         print(tempvar.count_time_logoff)
         time.sleep(1)
@@ -177,8 +181,8 @@ def auto_logoff():
 
 
 def notresponding():
-    while True
-        while tempvar.count_time_stop_if_not_responding < 5
+    while True:
+        while tempvar.count_time_stop_if_not_responding < 5:
             tempvar.count_time_stop_if_not_responding += 1
             print(tempvar.count_time_stop_if_not_responding)
             time.sleep(1)
@@ -195,8 +199,8 @@ class Login:
                 return render.login(loginform)
             else:
                 gpio_startup()
-                tt1 = thread(target=auto_logoff)
-                tt2 = thread(target=notresponding)
+                tt1 = Thread(target=auto_logoff)
+                tt2 = Thread(target=notresponding)
                 tt1.daemon = True
                 tt2.daemon = True
                 tt1.start()
@@ -206,6 +210,9 @@ class Login:
 
 class Page_one:
         def GET(self):
+            tt2 = Thread(target=notresponding)
+            tt2.daemon = True
+            tt2.start()
             return render.page_one()
 
         def POST(self):
@@ -303,6 +310,9 @@ class Error_page:
     def GET(self):
         return render.pageerror()
 
+class Route:
+    def GET(self):
+        return render.route()
 
 class Result_sensor_ultrasonic:
     def GET(self,*args):
