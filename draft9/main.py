@@ -315,6 +315,29 @@ class Route:
         return render.route()
 
     def POST(self):
+        i = web.input()
+        asd = i.message
+        words = asd.split()
+        print(words)
+        for i in words:
+            if i == u'Forward':# u' stand for encode in unicode, when return data from the web it is encode in unicode
+                motor_forward()
+                time.sleep(1)
+            elif i == u'Left':
+                motor_turn_left()
+                time.sleep(1)
+            elif i == u'Right':
+                motor_turn_right()
+                time.sleep(1)
+            elif i == u'Backward':
+                motor_backward()
+                time.sleep(1)
+            elif i == u'Stop':
+                motor_stop()
+                time.sleep(1)
+            else:
+                pass
+        motor_stop()
         return render.route()
 
 class Result_sensor_ultrasonic:
