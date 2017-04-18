@@ -314,6 +314,9 @@ class Route:
     def GET(self):
         return render.route()
 
+    def POST(self):
+        return render.route()
+
 class Result_sensor_ultrasonic:
     def GET(self,*args):
         return sensor_ultrasonic()

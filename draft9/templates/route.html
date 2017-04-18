@@ -10,11 +10,37 @@ function myTimer() {
     var t = d.toLocaleTimeString();
     document.getElementById("timer").innerHTML = t;
 }
-</script>
-<script>
-function addline(){
+
+function addline(arg1){
     var temp = document.getElementById("routebox").innerHTML;
-    document.getElementById("routebox").innerHTML = temp +"&#13;&#10;"+'forward';
+    document.getElementById("routebox").innerHTML = temp +"&#13;&#10;"+arg1;
+}
+
+function delay(w){
+	setTimeout(function(){jQuery.get("/w",function(result){jQuery("#text1").val(result);});},5000)
+}
+
+//.replace remove all line break with single spacing
+function routestart() {
+    var str = document.getElementById("routebox").value;
+    str = str.replace(/(\r\n|\n|\r)/gm," ");
+    var res = str.split(" ");
+    for(i = 0; i < res.length; i++){
+    var q = 0
+    if (res[i] == 'Forward') {
+	delay(forward);
+    } else if (res[i] == 'Left') {
+	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Right') {
+	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Backward') {
+	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Stop') {
+	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+	} else {
+   }
+  }
+  jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
 }
 </script>
 
@@ -49,20 +75,25 @@ function addline(){
         <tbody id= "123" style="display:block">
 	    <tr>
             <td><button class="button" type="Button" id="start">Start</button></td>
-            <td align="center" ><button class="button" type="Button" id="forward" onclick="addline()" >Forward</button></td>
-            <td><button class="button" type="Button" id="stop">Stop</button></td>
+            <td align="center" ><button class="button" type="Button" id="forward" onclick="addline('Forward')" >Forward</button></td>
+            <td><button class="button" type="Button" id="stop" onclick="addline('Stop')">Stop</button></td>
          </tr>
          <tr>
-            <td><button class="button" type="Button" id="left">Left</button></td>
-            <td align="center" ><button class="button" type="Button" id="backward">Backward</button></td>
-            <td><button class="button" type="Button" id="right">Right</button></td>
+            <td><button class="button" type="Button" id="left" onclick="addline('Left')">Left</button></td>
+            <td align="center" ><button class="button" type="Button" id="backward" onclick="addline('Backward')">Backward</button></td>
+            <td><button class="button" type="Button" id="right" onclick="addline('Right')">Right</button></td>
          </tr>
+        <tr>
+            <td></td>
+            <td>
+            <button class="button" type="Button" id="right" onclick="routestart()">Submit</button>
+            </td>
+            <td></td>
+        </tr>
         </tbody>
     </table>
-    </form>
-        <textarea id="routebox" name="message" rows="10" cols="30" style='white-space:pre'>
-            Text
-        </textarea>
+         <textarea readonly id="routebox" name="message" rows="10" cols="30">The command will show in here</textarea>
     </div>
+   </form>
 </body>
 </html>
