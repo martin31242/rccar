@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<link rel="stylesheet" href="/static/styles.css" type="text/css" >
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/--version--/jquery.min.js"></script>
+<script type="text/javascript" src="http://creativecouple.github.com/jquery-timing/jquery-timing.min.js"></script>
+<script>
+var myVar = setInterval(function(){ myTimer() }, 500);
+
+function myTimer() {
+    var d = new Date();
+    var t = d.toLocaleTimeString();
+    document.getElementById("timer").innerHTML = t;
+}
+
+function addline(arg1){
+    var temp = document.getElementById("routebox").innerHTML;
+    document.getElementById("routebox").innerHTML = temp +"&#13;&#10;"+arg1;
+}
+
+//.replace remove all line break with single spacing
+function routestart() {
+    var str = document.getElementById("routebox").value;
+    str = str.replace(/(\r\n|\n|\r)/gm," ");
+    var res = str.split(" ");
+    for(i = 0; i < res.length; i++){
+    var q = 0
+    if (res[i] == 'Forward') {
+	jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+    } else if (res[i] == 'Left') {
+	jQuery.get("/left",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Right') {
+	jQuery.get("/right",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Backward') {
+	jQuery.get("/backward",function(result){jQuery("#text1").val(result);});
+	} else if (res[i] == 'Stop') {
+	jQuery.get("/stop",function(result){jQuery("#text1").val(result);});
+	} else {
+   }
+  }
+  jQuery.get("/forward",function(result){jQuery("#text1").val(result);});
+}
+</script>
+
+
+<title>RC CAR</title>
+</head>
+<body>
+<div class="grid">
+    <div class="pageheader">
+        <h1 align = "center">RC car control user interface</h1>
+        <p align="right" id="timer"></p>
+    </div>
+    <div class="leftmenu">
+        <strong >menu</strong><br><br>
+        <ul>
+		<li><a href="/about" target ="">About</a></li><br>
+		<li><a href="/control" target ="">Control</a></li><br>
+		<li><a href="/route" target ="">Program Route</a></li><br>
+		<li><a href="/setting" target ="">Setting</a></li><br>
+		<li><a href="/source_code" target ="">Source code</a></li><br>
+		<li><a href="" target ="">Issue report</a></li><br>
+		<li><a href="/updatelog" target ="">Update log</a></li><br>
+		<li><a href="/logoff" target ="">Log Off</a></li><br>
+        </ul>
+    </div>
+    <div class="descrip">
+    <h2 align = "center">description</h2>
+    </div>
+    <div class="route">
+    <form name="main" method="post">
+    <table align="left">
+        <tbody id= "123" style="display:block">
+	    <tr>
+            <td><button class="button" type="Button" id="start">Start</button></td>
+            <td align="center" ><button class="button" type="Button" id="forward" onclick="addline('Forward')" >Forward</button></td>
+            <td><button class="button" type="Button" id="stop" onclick="addline('Stop')">Stop</button></td>
+         </tr>
+         <tr>
+            <td><button class="button" type="Button" id="left" onclick="addline('Left')">Left</button></td>
+            <td align="center" ><button class="button" type="Button" id="backward" onclick="addline('Backward')">Backward</button></td>
+            <td><button class="button" type="Button" id="right" onclick="addline('Right')">Right</button></td>
+         </tr>
+        <tr>
+            <td></td>
+            <td>
+            <input type="submit" value="submit" /><br />
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+         <textarea readonly id="routebox" name="message" rows="10" cols="30">The command will show in here</textarea>
+    </div>
+   </form>
+</body>
+</html>
